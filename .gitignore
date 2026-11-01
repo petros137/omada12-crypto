@@ -1,0 +1,20 @@
+# Build (Maven)
+target/
+app/target/
+
+# IntelliJ / editors
+.idea/
+*.iml
+out/
+.vscode/
+
+# Λειτουργικό σύστημα
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Προσωρινά αρχεία της εφαρμογής (ατομική εγγραφή)
+*.part
+
+# Προσωρινά Office
+~$*
