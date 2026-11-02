@@ -2,17 +2,17 @@
 # Ισχύει ο ΤΕΛΕΥΤΑΙΟΣ κανόνας που ταιριάζει. Αντικαταστήστε τα @..._GITHUB με τα πραγματικά usernames.
 
 # Προεπιλογή: ο PM εγκρίνει ό,τι δεν καλύπτεται παρακάτω
-*                               @NIKOS_GITHUB
+*                               @petros137
 
 # PM & Ποιότητα (Νίκος)
-/README.md                      @NIKOS_GITHUB
-/CONTRIBUTING.md                @NIKOS_GITHUB
-/.github/                       @NIKOS_GITHUB
-/docs/decisions.md              @NIKOS_GITHUB
-/docs/meetings/                 @NIKOS_GITHUB
-/docs/P1/1.1-perigrafi.md       @NIKOS_GITHUB
-/docs/P1/1.2-gantt/             @NIKOS_GITHUB
-/docs/P2/2.5-metrics/           @NIKOS_GITHUB
+/README.md                      @petros137
+/CONTRIBUTING.md                @petros137
+/.github/                       @petros137
+/docs/decisions.md              @petros137
+/docs/meetings/                 @petros137
+/docs/P1/1.1-perigrafi.md       @petros137
+/docs/P1/1.2-gantt/             @petros137
+/docs/P2/2.5-metrics/           @petros137
 
 # Αναλυτής & Ελεγκτής (Απόστολος)
 /docs/P1/1.3-apaitiseis.md      @Daglisapo
@@ -25,12 +25,12 @@
 /app/src/test/                  @Daglisapo
 
 # Σχεδιαστής (Λεωνίδας)
-/docs/P1/othones-UI.md          @LEONIDAS_GITHUB
-/docs/P1/mockups/               @LEONIDAS_GITHUB
-/docs/P2/2.1-class-diagram/     @LEONIDAS_GITHUB
-/docs/P2/2.2-sequence/          @LEONIDAS_GITHUB
-/app/src/main/resources/        @LEONIDAS_GITHUB
+/docs/P1/othones-UI.md          @LeonidasDimitriadis
+/docs/P1/mockups/               @LeonidasDimitriadis
+/docs/P2/2.1-class-diagram/     @LeonidasDimitriadis
+/docs/P2/2.2-sequence/          @LeonidasDimitriadis
+/app/src/main/resources/        @LeonidasDimitriadis
 
 # Προγραμματιστής (Ηλίας)
-/app/pom.xml                    @ILIAS_GITHUB
-/app/src/main/java/             @ILIAS_GITHUB
+/app/pom.xml                    @iliasgavr
+/app/src/main/java/             @iliasgavr
