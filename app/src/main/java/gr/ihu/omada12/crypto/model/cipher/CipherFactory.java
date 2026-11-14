@@ -11,17 +11,21 @@ import java.util.List;
 public final class CipherFactory {
     public static final String CAESAR = "Caesar";
     public static final String VIGENERE = "Vigenère";
+    public static final String AES = "AES-256";
+    public static final String AES_KEY = "AES-256 (key)";
 
     private CipherFactory() { }
 
     public static List<String> availableAlgorithms() {
-        return List.of(CAESAR, VIGENERE);
+        return List.of(AES, AES_KEY, CAESAR, VIGENERE);
     }
 
     public static TextCipher create(String name) {
         switch (name) {
             case CAESAR:   return new CaesarCipher();
             case VIGENERE: return new VigenereCipher();
+            case AES:      return new AesCipher();
+            case AES_KEY:  return new AesKeyCipher();
             default: throw new IllegalArgumentException("Unknown algorithm: " + name);
         }
     }
