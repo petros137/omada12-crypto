@@ -1,0 +1,32 @@
+/* Σκοτεινό θέμα (APP-07). Το Modena υπολογίζει μόνο του τα χρώματα κειμένου από το -fx-base. */
+.root {
+    -o12-bg: #12191b;
+    -o12-surface: #1b2528;
+    -o12-border: #2f3e41;
+    -o12-text: #e2ecea;
+    -o12-muted: #95a9a6;
+    -o12-ok: #56cc85;
+    -o12-error: #ff6b5e;
+    -o12-warning: #ffb44f;
+    -fx-base: #243033;
+    -fx-background: #12191b;
+    -fx-control-inner-background: #172022;
+    -fx-control-inner-background-alt: #1b2528;
+}
+
+.chart-plot-background {
+    -fx-background-color: #172022;
+}
+
+.axis, .chart-title, .chart-legend-item, .axis-label {
+    -fx-text-fill: #e2ecea;
+    -fx-tick-label-fill: #e2ecea;
+}
+
+.chart-legend {
+    -fx-background-color: #1b2528;
+}
+
+.text-input {
+    -fx-prompt-text-fill: #7f9390;
+}

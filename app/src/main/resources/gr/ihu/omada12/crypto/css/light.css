@@ -1,0 +1,13 @@
+/* Φωτεινό θέμα (APP-07) - παλέτα Ομάδας 12 από τα mockups */
+.root {
+    -o12-bg: #f3f6f5;
+    -o12-surface: #ffffff;
+    -o12-border: #cfdbd8;
+    -o12-text: #142d2a;
+    -o12-muted: #52646a;
+    -o12-ok: #1b8748;
+    -o12-error: #b5452b;
+    -o12-warning: #a65f00;
+    -fx-base: #e6eeec;
+    -fx-background: #f3f6f5;
+}
