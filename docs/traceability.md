@@ -1,6 +1,6 @@
 # Ιχνηλασιμότητα: απαίτηση → UC → οθόνη → κλάση → test
 
-Ομάδα 12 · Υπεύθυνος: Απόστολος Δαγκλής (Αναλυτής & Ελεγκτής) · ενημέρωση Ε5 (9/11/2026)
+Ομάδα 12 · Υπεύθυνος: Απόστολος Δαγκλής (Αναλυτής & Ελεγκτής) · ενημέρωση Ε6 (16/11/2026)
 
 Κάθε λειτουργική απαίτηση του [1.3](P1/1.3-apaitiseis.md) φαίνεται εδώ μέχρι το test που την ελέγχει.
 Η στήλη «Οθόνη» ακολουθεί το [`othones-UI.md`](P1/othones-UI.md) (UI-xx και καρτέλα).
@@ -10,6 +10,11 @@
 README §8) που είναι η πρόταση. Όταν ο Ηλίας ανεβάσει μια κλάση, το «προγραμματίζεται» αντικαθίσταται με το
 πραγματικό όνομα, και το ίδιο όταν μπει το test στο `app/src/test/`.
 
+**Ενημέρωση 16/11 (Ε6).** Στο `main` υπάρχουν πλέον τα πακέτα `model/cipher`, `model/crypto`, `model/io`, `model/key`
+του Ηλία και τα tests CipherTest, AesCipherTest, CipherFactoryTest, KeyDerivationTest, KeyManagerTest,
+BundleConsistencyTest και OfficialTestCasesTest (μόνο TC-01). Οι γραμμές ENC-01/02/03/08, APP-04, NFR-01/02/09/11
+έχουν τα πραγματικά ονόματα· οι υπόλοιπες μένουν «προγραμματίζεται».
+
 «χειροκίνητα» = λειτουργία καθαρά διεπαφής· ελέγχεται με το χέρι ή με screenshot (2.6).
 
 
@@ -17,14 +22,14 @@ README §8) που είναι η πρόταση. Όταν ο Ηλίας ανεβ
 
 | ID | Προτ. | UC | Οθόνη | Κλάση | Test |
 |---|---|---|---|---|---|
-| ENC-01 | M | UC-01 | UI-02 Κείμενο | προγραμματίζεται (TextCipher, CipherFactory, CaesarCipher, VigenereCipher, AesCipher, AesKeyCipher, TextCryptoController) | προγραμματίζεται (CipherTest, AesCipherTest, CipherFactoryTest, OfficialTestCasesTest) |
-| ENC-02 | M | UC-02 | UI-02 Κείμενο | προγραμματίζεται (ίδιες με ENC-01 και Base64Text) | προγραμματίζεται (CipherTest, AesCipherTest) |
-| ENC-03 | M | UC-01 | UI-02 Κείμενο | προγραμματίζεται (KeyDerivation, PasswordBox, AesCipher) | προγραμματίζεται (KeyDerivationTest, AesCipherTest) |
+| ENC-01 | M | UC-01 | UI-02 Κείμενο | TextCipher, CipherFactory, CaesarCipher, VigenereCipher, AesCipher, AesKeyCipher · προγραμματίζεται (TextCryptoController) | CipherTest, AesCipherTest, CipherFactoryTest, OfficialTestCasesTest (TC-01) |
+| ENC-02 | M | UC-02 | UI-02 Κείμενο | ίδιες με ENC-01 και Base64Text · προγραμματίζεται (TextCryptoController) | CipherTest, AesCipherTest |
+| ENC-03 | M | UC-01 | UI-02 Κείμενο | KeyDerivation, PasswordBox, AesCipher | KeyDerivationTest, AesCipherTest |
 | ENC-04 | M | UC-03 | UI-02 Αρχεία | προγραμματίζεται (FileCryptoService, EncFileHeader, StreamCipherPump, FileCryptoController) | προγραμματίζεται (FileCryptoServiceTest) |
 | ENC-05 | M | UC-04 | UI-02 Αρχεία | προγραμματίζεται (FileCryptoService, AtomicFileWriter) | προγραμματίζεται (FileCryptoServiceTest, OfficialTestCasesTest) |
 | ENC-06 | S | UC-03 | UI-02 Αρχεία | προγραμματίζεται (DropZone, FileSelection, FileDialogs) | χειροκίνητα / screenshot (2.6) |
 | ENC-07 | S | UC-05 | UI-02 PDF | προγραμματίζεται (PdfLocker, PdfController) | προγραμματίζεται (PdfLockerTest) |
-| ENC-08 | S | UC-06 | UI-02 Κείμενο | προγραμματίζεται (KeyManager, AesKeyCipher) | προγραμματίζεται (KeyManagerTest, CipherTest) |
+| ENC-08 | S | UC-06 | UI-02 Κείμενο | KeyManager, AesKeyCipher | KeyManagerTest, CipherTest |
 | ENC-09 | S | UC-01 | UI-02 Κείμενο | προγραμματίζεται (Views, TextCryptoController) | χειροκίνητα |
 | ENC-10 | S | UC-03 | UI-02 Αρχεία | προγραμματίζεται (ProgressListener, StreamCipherPump, TaskRunner, ActionRunner) | προγραμματίζεται (FileCryptoServiceTest) |
 | ENC-11 | C | UC-03 | UI-02 Αρχεία | προγραμματίζεται (BatchEncryptor, BatchReport) | προγραμματίζεται (BatchEncryptorTest) |
@@ -91,7 +96,7 @@ README §8) που είναι η πρόταση. Όταν ο Ηλίας ανεβ
 | APP-01 | M | όλες | UI-01 | προγραμματίζεται (HomeController, Screen, AppModule) | χειροκίνητα / screenshot (2.6) |
 | APP-02 | M | όλες | όλες | προγραμματίζεται (Navigator) | χειροκίνητα |
 | APP-03 | M | όλες (και UC-13) | όλες | προγραμματίζεται (ExitGuard, AppStartup, VaultSession) | προγραμματίζεται (VaultTimingTest) + χειροκίνητα |
-| APP-04 | M | όλες | όλες | προγραμματίζεται (CryptoException, I18n, Feedback) | προγραμματίζεται (BundleConsistencyTest) |
+| APP-04 | M | όλες | όλες | CryptoException · προγραμματίζεται (I18n, Feedback) | BundleConsistencyTest |
 | APP-05 | M | όλες (π.χ. UC-12, UC-15) | όλες | προγραμματίζεται (Dialogs) | χειροκίνητα |
 | APP-06 | S | UC-25 | UI-08 Ρυθμίσεις | προγραμματίζεται (I18n, SettingsController) | προγραμματίζεται (BundleConsistencyTest) |
 | APP-07 | S | UC-25 | UI-08 Ρυθμίσεις | προγραμματίζεται (ThemeManager) | προγραμματίζεται (SettingsRepositoryTest) + screenshot (2.6) |
@@ -105,17 +110,17 @@ README §8) που είναι η πρόταση. Όταν ο Ηλίας ανεβ
 
 | ID | Κατηγορία | Πώς ελέγχεται (1.3) | Test |
 |---|---|---|---|
-| NFR-01 | Ασφάλεια | Κλειδί 32 bytes, IV 12 bytes· το ίδιο κείμενο με τον ίδιο κωδικό δίνει διαφορετικό κρυπτοκείμενο σε 2 εκτελέσεις | προγραμματίζεται (AesCipherTest) |
-| NFR-02 | Ασφάλεια | Επαναλήψεις = 600.000, salt = 16 bytes, νέο salt σε κάθε κρυπτογράφηση | προγραμματίζεται (KeyDerivationTest) |
+| NFR-01 | Ασφάλεια | Κλειδί 32 bytes, IV 12 bytes· το ίδιο κείμενο με τον ίδιο κωδικό δίνει διαφορετικό κρυπτοκείμενο σε 2 εκτελέσεις | AesCipherTest, KeyDerivationTest |
+| NFR-02 | Ασφάλεια | Επαναλήψεις = 600.000, salt = 16 bytes, νέο salt σε κάθε κρυπτογράφηση | KeyDerivationTest |
 | NFR-03 | Ασφάλεια | Το αρχείο ιστορικού έχει μόνο 5 πεδία (ημερομηνία, ενότητα, ενέργεια, όνομα αρχείου, αποτέλεσμα)· 0 εμφανίσεις του κωδικού στα αρχεία της εφαρμογής | προγραμματίζεται (HistoryServiceTest) |
 | NFR-04 | Ασφάλεια | Δεν υπάρχει λειτουργία ανάκτησης· η προειδοποίηση εμφανίζεται 1 φορά σε κάθε δημιουργία | χειροκίνητα / screenshot (2.6) |
 | NFR-05 | Αξιοπιστία | Μετά από αποτυχία ή ακύρωση: αρχικό αρχείο ίδιο byte-προς-byte, 0 αρχεία εξόδου | προγραμματίζεται (FileCryptoServiceTest) |
 | NFR-06 | Απόδοση | Χρονομέτρηση: < 1 s για 10.000 χαρακτήρες, < 5 s για 50 MB | προγραμματίζεται (AesCipherTest, FileCryptoServiceTest) |
 | NFR-07 | Ευχρηστία | Μέτρηση κλικ για κάθε UC με λειτουργίες M: ≤ 3 | χειροκίνητα |
 | NFR-08 | Ευχρηστία | Αποθήκευση ως «.jpg» δίνει αρχείο .png· είσοδος JPEG δείχνει προειδοποίηση | προγραμματίζεται (StegoServiceTest) |
-| NFR-09 | Διεθνοποίηση | Τα δύο αρχεία πόρων έχουν ακριβώς τα ίδια κλειδιά· 0 κλειδιά που λείπουν | προγραμματίζεται (BundleConsistencyTest) |
+| NFR-09 | Διεθνοποίηση | Τα δύο αρχεία πόρων έχουν ακριβώς τα ίδια κλειδιά· 0 κλειδιά που λείπουν | BundleConsistencyTest |
 | NFR-10 | Φορητότητα | Εκκίνηση και `mvn test` επιτυχή με Java 17 (σε τουλάχιστον Windows και Linux) | `mvn clean test` |
-| NFR-11 | Συντηρησιμότητα | Προσθήκη αλγορίθμου = 1 νέα κλάση + 1 γραμμή στη Factory, 0 αλλαγές σε controllers/FXML | προγραμματίζεται (CipherFactoryTest) |
+| NFR-11 | Συντηρησιμότητα | Προσθήκη αλγορίθμου = 1 νέα κλάση + 1 γραμμή στη Factory, 0 αλλαγές σε controllers/FXML | CipherFactoryTest |
 | NFR-12 | Ιδιωτικότητα | Όλες οι λειτουργίες δουλεύουν χωρίς σύνδεση· 0 εξαρτήσεις δικτύου ή βάσης δεδομένων | έλεγχος κώδικα |
 
 ## Περιπτώσεις χρήσης → προδιαγραφή → test cases
