@@ -1,0 +1,96 @@
+---
+title: "Διάγραμμα κλάσεων v1 (Ε6): μοντέλο κρυπτογράφησης"
+---
+classDiagram
+    direction LR
+    namespace model_cipher {
+        class Base64Text {
+            +decode(text)$ byte[]
+        }
+        class TextCipher {
+            <<interface>>
+            +getName() String
+            +encrypt(text, key) String
+            +decrypt(text, key) String
+            +validateKey(key)
+            +getKeyHintKey() String
+        }
+        class ClassicalCipher {
+            <<abstract>>
+            +shift(c, n) char
+            #requireText(text)
+        }
+        class CaesarCipher {
+            +apply(text, shift) String
+        }
+        class VigenereCipher {
+            +keyShift(key, j) int
+        }
+        class AesCipher
+        class AesKeyCipher {
+            +toSecretKey(base64) SecretKey
+        }
+        class CipherFactory {
+            +availableAlgorithms() List~String~
+            +create(name) TextCipher
+        }
+        class CryptoException {
+            +getMessageKey() String
+        }
+    }
+    namespace model_crypto {
+        class Hex {
+            +encode(bytes)$ String
+            +grouped(bytes)$ String
+        }
+        class PasswordBox {
+            +seal(data, password) byte[]
+            +open(sealed, password) byte[]
+        }
+        class KeyDerivation {
+            +int ITERATIONS
+            +newSalt() byte[]
+            +derive(password, salt) SecretKey
+        }
+        class AesGcm {
+            +encrypt(data, key, aad) byte[]
+            +decrypt(blob, key, aad) byte[]
+            +newCipher(mode, key, iv, aad) Cipher
+        }
+    }
+    namespace model_io {
+        class FileProcessor {
+            +read(file) byte[]
+            +write(file, data)
+        }
+        class ProgressListener {
+            <<interface>>
+            +onProgress(done, total)
+            +isCancelled() boolean
+        }
+        class AtomicFileWriter
+    }
+    namespace model_key {
+        class KeyManager {
+            +generateAesKey() String
+            +save(key, file)
+            +load(file) String
+        }
+    }
+    TextCipher <|.. ClassicalCipher
+    ClassicalCipher <|-- CaesarCipher
+    ClassicalCipher <|-- VigenereCipher
+    TextCipher <|.. AesCipher
+    TextCipher <|.. AesKeyCipher
+    CipherFactory ..> TextCipher : δημιουργεί
+    AesCipher --> PasswordBox
+    PasswordBox --> KeyDerivation
+    PasswordBox --> AesGcm
+    AesKeyCipher --> AesGcm
+    TextCipher ..> CryptoException : throws
+
+    AesKeyCipher ..> KeyManager : κλειδί Base64
+    AesCipher ..> Base64Text
+    AesKeyCipher ..> Base64Text
+    FileProcessor ..> CryptoException
+    KeyManager ..> CryptoException
