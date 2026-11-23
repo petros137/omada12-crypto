@@ -1,5 +1,6 @@
 package gr.ihu.omada12.crypto.model.cipher;
 
+import gr.ihu.omada12.crypto.model.key.KeyManager;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -30,6 +31,15 @@ class CipherTest {
         String c = v.encrypt("Attack at dawn!", "lemon");
         assertEquals("Lxfopv ef rnhr!", c);
         assertEquals("Attack at dawn!", v.decrypt(c, "lemon"));
+    }
+
+    @Test // TC-04 (οδηγός ρόλου)
+    void aesRejectsWrongKey() throws CryptoException {
+        KeyManager keys = new KeyManager();
+        AesKeyCipher aes = new AesKeyCipher();
+        String cipherText = aes.encrypt("μυστικό μήνυμα", keys.generateAesKey());
+        CryptoException e = assertThrows(CryptoException.class, () -> aes.decrypt(cipherText, keys.generateAesKey()));
+        assertEquals("error.wrongKeyOrCorrupted", e.getMessageKey());
     }
 
     @Test // TC-05 (οδηγός ρόλου)

@@ -11,9 +11,7 @@ import java.util.Base64;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-// Υλοποιεί: ENC-08 (έλεγχος δημιουργίας, αποθήκευσης και φόρτωσης κλειδιού)
-
-/** TC-24: κλειδί 256 bit που αποθηκεύεται, φορτώνεται και δουλεύει· λείπει το αρχείο → μήνυμα. */
+/** ENC-08: δημιουργία, αποθήκευση και φόρτωση κλειδιού. */
 class KeyManagerTest {
     private final KeyManager keys = new KeyManager();
 
