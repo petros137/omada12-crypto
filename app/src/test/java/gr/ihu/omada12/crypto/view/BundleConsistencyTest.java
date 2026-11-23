@@ -1,5 +1,6 @@
 package gr.ihu.omada12.crypto.view;
 
+import gr.ihu.omada12.crypto.model.history.AppModule;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -10,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Properties;
 import java.util.Set;
 import java.util.TreeSet;
@@ -21,20 +23,15 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-// Υλοποιεί: NFR-09, APP-06 (έλεγχος των κειμένων ΕΛ/EN)
-
 /**
- * TC-58: τα δύο bundles έχουν ακριβώς τα ίδια κλειδιά και ΚΑΘΕ κλειδί που χρησιμοποιείται στον κώδικα
- * ή στα FXML υπάρχει. Έτσι δεν εμφανίζεται ποτέ «σκέτο» κλειδί στην οθόνη.
- * Προσωρινά χωρίς τα δυναμικά κλειδιά των Screen, AppModule (Ε5), CrackTime (Ε7) και TutorialDialog (Ε9):
- * οι κλάσεις αυτές δεν υπάρχουν ακόμη· οι έλεγχοι επιστρέφουν όταν μπουν.
+ * NFR-09, APP-06: τα δύο bundles έχουν ακριβώς τα ίδια κλειδιά και ΚΑΘΕ κλειδί που
+ * χρησιμοποιείται στον κώδικα ή στα FXML υπάρχει. Έτσι δεν εμφανίζεται ποτέ «σκέτο» κλειδί.
  */
 class BundleConsistencyTest {
     private static final Path RES = Path.of("src/main/resources/gr/ihu/omada12/crypto");
     private static final Path JAVA = Path.of("src/main/java");
     private static final Pattern JAVA_KEY = Pattern.compile(
-            "\"((?:error|enc|vault|sig|stego|lab|pw|action|module|help|tutorial|settings|history|home|screen|common"
-                    + "|filter|nav|exit|general|app)\\.[A-Za-z0-9_.]*[A-Za-z0-9_])\"");
+            "\"((?:error|enc|vault|sig|stego|lab|pw|action|module|help|tutorial|settings|history|home|screen|common|filter|nav|exit|general|app)\\.[A-Za-z0-9_.]*[A-Za-z0-9_])\"");
     private static final Pattern FXML_KEY = Pattern.compile("\"%([A-Za-z0-9_.]+)\"");
 
     private static Properties el;
@@ -69,9 +66,14 @@ class BundleConsistencyTest {
         assertTrue(missing.isEmpty(), "Λείπουν κλειδιά: " + missing);
     }
 
-    @Test // κλειδιά που φτιάχνονται δυναμικά (προς το παρόν μόνο τα επίπεδα ισχύος κωδικού)
+    @Test // κλειδιά που φτιάχνονται δυναμικά στον κώδικα
     void dynamicKeysExist() {
         List<String> keys = new ArrayList<>();
+        for (Screen s : Screen.values()) {
+            keys.add(s.getTitleKey());
+            keys.add(s.getHelpKey());
+        }
+        for (AppModule m : AppModule.values()) keys.add(m.getKey());
         for (int i = 0; i <= 4; i++) keys.add("pw.level." + i);
         List<String> missing = keys.stream().filter(k -> !el.containsKey(k)).collect(Collectors.toList());
         assertTrue(missing.isEmpty(), "Λείπουν κλειδιά: " + missing);
