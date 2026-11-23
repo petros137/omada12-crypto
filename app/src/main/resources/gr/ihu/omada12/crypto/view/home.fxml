@@ -39,7 +39,7 @@
                 </VBox>
             </graphic>
         </Button>
-        <Button fx:id="vaultTile" disable="true" onAction="#openVault" styleClass="tile" maxWidth="Infinity" maxHeight="Infinity"
+        <Button fx:id="vaultTile" onAction="#openVault" styleClass="tile" maxWidth="Infinity" maxHeight="Infinity"
                 GridPane.columnIndex="1" GridPane.rowIndex="0">
             <graphic>
                 <VBox spacing="8">
