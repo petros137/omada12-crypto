@@ -1,0 +1,54 @@
+sequenceDiagram
+    title UC-04 Αποκρυπτογράφηση αρχείου .enc (βήματα της προδιαγραφής 1.5)
+    autonumber
+    actor U as Χρήστης
+    participant C as FileCryptoController
+    participant D as FileDialogs
+    participant R as ActionRunner
+    participant S as FileCryptoService
+    participant W as AtomicFileWriter
+    participant E as EncFileHeader
+    participant K as KeyDerivation
+    participant P as StreamCipherPump
+    U->>C: αρχείο .enc, κωδικός, «Αποκρυπτογράφηση» → decrypt() [βήματα 2–4]
+    C->>C: checkSelection(true), checkPassword(pw)
+    alt 2a1 περισσότερα από ένα αρχεία
+        C-->>U: «Για αποκρυπτογράφηση επιλέξτε ακριβώς ένα αρχείο .enc.» → βήμα 2
+    else 3a1 κενός κωδικός
+        C-->>U: «Δώστε κωδικό πρόσβασης.» → βήμα 3
+    else έγκυρη επιλογή
+        C->>D: save("enc.file.saveTitle", όνομα χωρίς .enc) [βήμα 5]
+        Note over D,S: 5a2 αρχείο υπάρχει → το παράθυρο ζητά επιβεβαίωση αντικατάστασης (APP-05)
+        alt 5a1 ο χρήστης ακυρώνει
+            D-->>C: null → η UC τελειώνει χωρίς αλλαγή
+        else θέση αποθήκευσης
+            D-->>C: target
+            C->>R: run("action.decryptFile", source, work, onSuccess)
+            R->>S: decrypt(source, target, password, progress)
+            S->>W: write(target, body) → προσωρινό .part
+            W->>E: read(in) [βήμα 6]
+            alt 6a1 δεν είναι .enc της εφαρμογής
+                E-->>R: CryptoException("error.notEncFile") → κανένα αρχείο εξόδου
+            else έγκυρη κεφαλίδα
+                W->>K: derive(password, salt) [βήμα 7]
+                W->>P: pump(in, out, cipher, size, progress)
+                loop κάθε κομμάτι 64 KB
+                    P->>R: listener.onProgress(done, total) → μπάρα προόδου (ENC-10)
+                    opt 7a1 «Ακύρωση»
+                        P-->>W: CryptoException("error.cancelled")
+                        W->>W: deleteQuietly(.part)
+                        R->>C: «Η ενέργεια ακυρώθηκε. Δεν δημιουργήθηκε αρχείο.»
+                    end
+                end
+                P->>P: cipher.doFinal() [βήμα 8, έλεγχος ετικέτας GCM]
+                alt 8a1 λάθος κωδικός ή αλλοιωμένο αρχείο
+                    P-->>W: CryptoException("error.wrongKeyOrCorrupted")
+                    W->>W: deleteQuietly(.part)
+                    R->>C: «Λάθος κωδικός/κλειδί ή κατεστραμμένα δεδομένα.» + ιστορικό: αποτυχία
+                else σωστός κωδικός
+                    W->>W: move(.part, target) [βήμα 9, NFR-05]
+                    R->>C: onSuccess → μήνυμα επιτυχίας + ιστορικό: επιτυχία
+                end
+            end
+        end
+    end

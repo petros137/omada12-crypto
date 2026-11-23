@@ -1,0 +1,51 @@
+sequenceDiagram
+    title UC-01 Κρυπτογράφηση κειμένου (βήματα της προδιαγραφής 1.5)
+    autonumber
+    actor U as Χρήστης
+    participant C as TextCryptoController
+    participant F as CipherFactory
+    participant R as ActionRunner
+    participant A as TextCipher (AesCipher)
+    participant B as PasswordBox
+    participant K as KeyDerivation
+    participant G as AesGcm
+    participant H as HistoryService
+    U->>C: κείμενο, αλγόριθμος, κωδικός, «Κρυπτογράφηση» → encrypt() [βήματα 2–4]
+    opt 3a1 τυχαίο κλειδί αντί για κωδικό
+        Note over U,C: εκτελείται η UC-06 (generateKey / φόρτωση) και η ροή συνεχίζει με το κλειδί
+    end
+    C->>F: create(algorithm)
+    F-->>C: TextCipher
+    C->>R: run("action.encryptText", "", work, onSuccess)
+    R->>A: encrypt(text, key) [βήμα 5, σε νήμα παρασκηνίου]
+    alt 5a1 κενό κείμενο
+        A-->>R: CryptoException("error.emptyText")
+        R->>C: «Δώστε κείμενο για επεξεργασία.» → βήμα 2
+    else 5a2 κενός κωδικός (AES)
+        A-->>R: CryptoException("error.emptyPassword")
+        R->>C: «Δώστε κωδικό πρόσβασης.» → βήμα 3
+    else 5a3 μη έγκυρο κλειδί Caesar / Vigenère
+        A-->>R: CryptoException (μήνυμα του αλγορίθμου)
+        R->>C: αντίστοιχο μήνυμα → βήμα 3
+    else έγκυρα δεδομένα
+        A->>B: seal(bytes, password)
+        B->>K: newSalt()
+        B->>K: derive(password, salt) [βήμα 6, PBKDF2]
+        K-->>B: SecretKey
+        B->>G: encrypt(data, key, salt) [βήμα 7, AES-256-GCM, νέο IV]
+        G-->>B: IV + κρυπτοκείμενο + ετικέτα
+        B-->>A: salt + IV + κρυπτοκείμενο
+        A-->>R: Base64
+        R->>C: onSuccess.accept(result) → πεδίο εξόδου, μήνυμα επιτυχίας
+        R->>H: record(ENCRYPTION, "action.encryptText", "", true) [βήμα 8, χωρίς κείμενο/κωδικό]
+    end
+    alt «Αντιγραφή» [βήματα 9–10]
+        U->>C: copy()
+        C->>C: Views.copyToClipboard(output)
+    else «Αποθήκευση»
+        U->>C: saveOutput()
+        C->>C: ctx.files().save(...) → Files.writeString
+        opt 9a1 ακύρωση παραθύρου
+            Note over C: δεν γράφεται αρχείο, το αποτέλεσμα μένει στην οθόνη
+        end
+    end
