@@ -1,0 +1,47 @@
+sequenceDiagram
+    title UC-07 Δημιουργία θησαυροφυλακίου (βήματα της προδιαγραφής 1.5)
+    autonumber
+    actor U as Χρήστης
+    participant C as VaultListController
+    participant P as PasswordStrengthMeter
+    participant R as ActionRunner
+    participant M as VaultManager
+    participant S as VaultStore
+    participant K as KeyDerivation
+    participant G as AesGcm
+    participant W as AtomicFileWriter
+    participant N as Navigator
+    U->>C: όνομα, κύριος κωδικός ×2 [βήματα 2–3]
+    C->>P: evaluate(password) [βήμα 4, «include» UC-24]
+    P-->>C: ισχύς → μπάρα και κείμενο
+    C-->>U: προειδοποίηση «ο κύριος κωδικός δεν ανακτάται» [βήμα 5]
+    opt 5a1 δεν τσεκάρει «Το κατάλαβα»
+        Note over C: createButton.disable = true
+    end
+    U->>C: «Δημιουργία» → create() [βήμα 6]
+    C->>R: run("action.vaultCreate", name, work, onSuccess)
+    R->>M: create(name, password, confirm) [βήμα 7]
+    M->>M: pathOf(name)
+    alt 7a1 μη έγκυρο όνομα
+        M-->>R: CryptoException("error.vaultName") → βήμα 2
+    else έγκυρο όνομα
+        M->>M: checkNewPassword(password, confirm)
+        alt 7a3 οι κωδικοί διαφέρουν
+            M-->>R: CryptoException("error.passwordMismatch") → βήμα 3
+        else 7a4 πιο αδύναμος από το ελάχιστο
+            M-->>R: CryptoException("error.passwordTooWeak") → βήμα 3
+        else έγκυρος κωδικός
+            M->>S: create(file, password)
+            alt 7a2 υπάρχει ήδη με αυτό το όνομα
+                S-->>R: CryptoException("error.vaultExists") → βήμα 2
+            else νέο θησαυροφυλάκιο
+                S->>K: newSalt(), derive(password, salt) [βήμα 8, PBKDF2]
+                S->>G: encrypt(άδειο περιεχόμενο, key, header)
+                S->>W: write(file, header + body)
+                S-->>M: Vault
+                M-->>R: Vault
+                R->>C: open(vault) + ιστορικό [βήμα 9]
+                C->>N: show(VAULT) → UI-04
+            end
+        end
+    end

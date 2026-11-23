@@ -1,0 +1,45 @@
+sequenceDiagram
+    title UC-08 Ξεκλείδωμα θησαυροφυλακίου (βήματα της προδιαγραφής 1.5)
+    autonumber
+    actor U as Χρήστης
+    participant C as VaultListController
+    participant R as ActionRunner
+    participant M as VaultManager
+    participant T as LoginThrottle
+    participant S as VaultStore
+    participant K as KeyDerivation
+    participant G as AesGcm
+    participant X as VaultCodec
+    participant N as Navigator
+    U->>C: θησαυροφυλάκιο, κύριος κωδικός, «Ξεκλείδωμα» → unlock() [βήματα 3–4]
+    alt 3a1 κενός κωδικός
+        C-->>U: «Δώστε κωδικό πρόσβασης.» → βήμα 3
+    else
+        C->>R: run("action.vaultUnlock", name, work, onSuccess)
+        R->>M: unlock(name, password)
+        M->>T: remainingSeconds(name) [βήμα 5]
+        alt 5a1 ισχύει αναμονή
+            M-->>R: CryptoException("error.vaultThrottled", N) → «Δοκιμάστε ξανά σε N δευτερόλεπτα.»
+        else χωρίς αναμονή
+            M->>S: open(file, password)
+            alt 6a1 δεν είναι θησαυροφυλάκιο / κατεστραμμένο
+                S-->>R: CryptoException("error.notVault" ή "error.vaultCorrupted") → η UC τελειώνει
+            else έγκυρο δοχείο
+                S->>K: derive(password, salt) [βήμα 6]
+                S->>G: decrypt(body, key, header)
+                alt 7a1 λάθος κύριος κωδικός
+                    G-->>S: CryptoException
+                    S-->>M: CryptoException("error.wrongMasterPassword")
+                    M->>T: recordFailure(name) [3ο λάθος → 30 s, μετά ×2]
+                    R->>C: «Λάθος κύριος κωδικός.» + ιστορικό: αποτυχία
+                else σωστός κωδικός
+                    S->>X: decode(plain)
+                    S-->>M: Vault
+                    M->>T: recordSuccess(name) [βήμα 7, μηδενισμός λαθών]
+                    M-->>R: Vault
+                    R->>C: open(vault) + ιστορικό [βήμα 8]
+                    C->>N: show(VAULT) → UI-04 (συνεχίζει η UC-10)
+                end
+            end
+        end
+    end
