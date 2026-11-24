@@ -6,6 +6,4 @@
 
 <TabPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" tabClosingPolicy="UNAVAILABLE">
     <Tab text="%enc.tab.text"><fx:include source="enc_text.fxml"/></Tab>
-    <Tab text="%enc.tab.file"><fx:include source="enc_file.fxml"/></Tab>
-    <Tab text="%enc.tab.pdf"><fx:include source="enc_pdf.fxml"/></Tab>
 </TabPane>
